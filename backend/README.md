@@ -2,8 +2,8 @@
 
 Phase 01.01 introduces an installable Python package; 01.02 adds read-only
 health and service-info endpoints. Phase 01.03 adds validated environment
-settings, an explicit CORS allowlist and structured logging. Pytest coverage
-and the joint frontend/backend startup guide remain subsequent tasks.
+settings, an explicit CORS allowlist and structured logging. Phase 01.04 adds
+pytest coverage. The joint frontend/backend startup guide remains task 01.05.
 
 ## Environment and dependencies
 
@@ -66,8 +66,8 @@ uv commands used `UV_CACHE_DIR=/private/tmp/skillforge-uv-cache`.
 
 The initial sandboxed PyPI lookup failed on DNS; the permitted network retry
 succeeded. Dependencies were installed locally, with no global installation.
-At 01.01, no HTTP service or runtime endpoint was verified. No pytest suite,
-cross-platform compatibility or other Python version has been verified.
+At 01.01, no HTTP service, runtime endpoint or pytest suite was verified.
+Cross-platform compatibility and other Python versions remain unverified.
 Next.js source and dependencies remain unchanged.
 
 
@@ -150,3 +150,46 @@ Last reviewed: **2026-10-07 (America/Sao_Paulo)**.
   The server was stopped after verification. No model calls were made.
 - Subprocess startup with a credential-bearing origin: nonzero exit as expected; sentinel value absent from stdout/stderr.
 - `UV_CACHE_DIR=/private/tmp/skillforge-uv-cache uv build --project backend --offline`: exit 0, sdist and wheel built. `git diff --check`: exit 0.
+
+
+## Running tests (01.04)
+
+From the repository root:
+
+```bash
+uv sync --project backend --locked
+uv run --project backend --locked --offline pytest -c backend/pyproject.toml backend/tests -q -W error
+```
+
+Or from `backend/`, after syncing: `uv run --locked --offline pytest -q -W error`.
+The `dev` dependency group pins pytest 9.1.1 and httpx2 2.13.1, with transitive
+versions recorded in `uv.lock`. `uv sync` includes this group by default; runtime-only
+installations can use `uv sync --locked --no-dev`. No global installation is required.
+
+The installed Starlette TestClient prefers httpx2. The initial httpx-based run
+passed but emitted a deprecation warning; switching to httpx2 removed it.
+The final suite passes with warnings treated as errors.
+
+Coverage includes exact health/info JSON contracts, content types, installed
+version parity, required OpenAPI response fields, 404/405 behavior, environment
+settings reaching CORS, and invalid settings preventing application creation.
+Pytest also collects the four existing unittest safety cases for settings, CORS
+and JSON logging. An autouse fixture clears SkillForge environment overrides
+for each test and restores logger handlers, levels, propagation and disabled
+state afterward. Existing application module imports still occur at collection;
+run the suite with valid startup configuration.
+
+The HTTP client runs the ASGI application in-process; tests do not bind ports,
+contact model providers or require credentials. This is not a browser/E2E suite.
+
+### Verification — 01.04
+
+Last reviewed: **2026-10-07 (America/Sao_Paulo)**, Python 3.14.7.
+
+- `UV_CACHE_DIR=/private/tmp/skillforge-uv-cache uv sync --project backend`:
+  exit 0; installed development dependencies in the backend virtual environment.
+- `UV_CACHE_DIR=/private/tmp/skillforge-uv-cache uv run --project backend --locked --offline pytest -c backend/pyproject.toml backend/tests -q -W error`:
+  exit 0, **15 passed, 17 subtests passed**, no warnings.
+- `UV_CACHE_DIR=/private/tmp/skillforge-uv-cache uv pip check --python backend/.venv/bin/python`:
+  exit 0; all 23 installed packages compatible.
+- `git diff --check`: exit 0. Runtime application source was unchanged.
