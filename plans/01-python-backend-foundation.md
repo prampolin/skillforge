@@ -1,6 +1,6 @@
 # Phase 01 — Python Backend Foundation
 
-**Status:** in-progress  
+**Status:** done
 **Last reviewed:** 2026-10-07 (America/Sao_Paulo)  
 **Dependencies:** 00  
 **Purpose:** Introduce a minimal FastAPI service without disturbing the existing Next.js app.
@@ -15,7 +15,7 @@
   Acceptance: No open CORS or secrets in logs.
 - [x] **01.04 — Add pytest health/config tests**
   Acceptance: Tests run with documented command.
-- [ ] **01.05 — Document local startup alongside Next.js**  
+- [x] **01.05 — Document local startup alongside Next.js**
   Acceptance: Both servers can run independently.
 
 ## Verification and evidence
@@ -37,3 +37,4 @@
 | 2026-10-07 (America/Sao_Paulo) | 01.02 | Added `app.main:app` with typed health/info responses and installed distribution version. [Evidence](../backend/README.md): offline lock/sync exit 0; temporary loopback HTTP harness exit 0 for exact JSON, 200/content type, OpenAPI required fields, version parity, 404 and 405. Pytest remains 01.04 | verified |
 | 2026-10-07 (America/Sao_Paulo) | 01.03 | Validated environment settings, explicit GET-only CORS allowlist, JSON logging and loopback launcher. [Evidence](../backend/README.md): four unittest safety checks passed; real launcher HTTP/OpenAPI/JSON-log harness exit 0. Pytest setup remains 01.04 | verified |
 | 2026-10-07 (America/Sao_Paulo) | 01.04 | Pinned pytest/httpx2 dev dependencies, configured collection, added HTTP/OpenAPI and environment integration tests plus process-state isolation. [Documented command](../backend/README.md) with `-W error`: 15 passed, 17 subtests passed, exit 0; dependency check exit 0. Existing unittest checks retained | verified |
+| 2026-10-07 (America/Sao_Paulo) | 01.05 | [Local startup guide](../docs/guides/local-development.md) and README entry points. Real-process HTTP harness exit 0: concurrent responses, exact CORS origin, each service responds after stopping the other; all created processes stopped. Existing dependency/cache scope documented | verified; phase done |

@@ -3,7 +3,7 @@
 Phase 01.01 introduces an installable Python package; 01.02 adds read-only
 health and service-info endpoints. Phase 01.03 adds validated environment
 settings, an explicit CORS allowlist and structured logging. Phase 01.04 adds
-pytest coverage. The joint frontend/backend startup guide remains task 01.05.
+pytest coverage. See the [local development guide](../docs/guides/local-development.md) for two-terminal startup and shutdown.
 
 ## Environment and dependencies
 
@@ -47,7 +47,7 @@ identifies the v1 contract. All fields are required, with string values.
 Pydantic response models validate the outputs and expose their schemas in
 `/openapi.json`, following the [FastAPI response model documentation](https://fastapi.tiangolo.com/tutorial/response-model/).
 The package must be installed using the setup above before launching.
-The joint frontend/backend startup guide remains task 01.05.
+See the [local development guide](../docs/guides/local-development.md) for two-terminal startup and shutdown.
 
 ## Verification
 
@@ -193,3 +193,15 @@ Last reviewed: **2026-10-07 (America/Sao_Paulo)**, Python 3.14.7.
 - `UV_CACHE_DIR=/private/tmp/skillforge-uv-cache uv pip check --python backend/.venv/bin/python`:
   exit 0; all 23 installed packages compatible.
 - `git diff --check`: exit 0. Runtime application source was unchanged.
+
+
+### Verification — 01.05
+
+Last reviewed: **2026-10-07 (America/Sao_Paulo)**. The
+[local development guide](../docs/guides/local-development.md) documents setup,
+loopback addresses, independent terminals, shutdown, CORS and port conflicts.
+`python3 /private/tmp/skillforge-check-0105.py` exited 0: backend health before
+frontend startup, concurrent frontend HTML/API JSON responses, exact CORS origin,
+frontend response after backend stop, and backend response after frontend stop.
+Temporary processes were cleaned up. Existing dependencies/cache were used;
+production build, fresh install and browser integration were not checked.

@@ -122,6 +122,10 @@ skillforge/
 
 ## Getting Started
 
+For this existing checkout, follow the verified [local development guide](docs/guides/local-development.md)
+to run the root Next.js app and Python backend in separate terminals. The bootstrap
+sections below describe the planned architecture, not setup required for this checkout.
+
 ### Prerequisites
 
 - Git
