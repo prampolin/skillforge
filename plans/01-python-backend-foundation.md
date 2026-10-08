@@ -9,7 +9,7 @@
 
 - [x] **01.01 — Create backend/pyproject.toml and app package**  
   Acceptance: Python dependencies and supported version are pinned/documented.
-- [ ] **01.02 — Implement GET /health and GET /api/v1/info**  
+- [x] **01.02 — Implement GET /health and GET /api/v1/info**
   Acceptance: Both endpoints have stable JSON contracts.
 - [ ] **01.03 — Implement settings, CORS allowlist and structured logs**  
   Acceptance: No open CORS or secrets in logs.
@@ -34,3 +34,4 @@
 | Date (UTC or with timezone) | Item | Change / evidence | Result |
 |---|---|---|---|
 | 2026-10-07 (America/Sao_Paulo) | 01.01 | Added installable `backend/app`, pinned direct/build dependencies in `pyproject.toml`, Python 3.14 baseline, runtime `uv.lock` and local ignores. [Evidence](../backend/README.md): isolated sync, offline sdist/wheel build, lock check, dependency check and imports all exit 0 on Python 3.14.7; wheel content inspected. No endpoints implemented | verified |
+| 2026-10-07 (America/Sao_Paulo) | 01.02 | Added `app.main:app` with typed health/info responses and installed distribution version. [Evidence](../backend/README.md): offline lock/sync exit 0; temporary loopback HTTP harness exit 0 for exact JSON, 200/content type, OpenAPI required fields, version parity, 404 and 405. Pytest remains 01.04 | verified |

@@ -16,3 +16,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - After execution, update `plans/<phase>.md` and `plan.md`: checkbox, phase status, last-reviewed date and progress log with actual verification evidence. If not verified, leave unchecked and record the blocker.
 - Do not fabricate check results, token usage, performance, provider compatibility, or completed milestones.
 - Preserve existing files and local changes; prefer small, auditable diffs. Use Vim rather than nano in terminal instructions.
+
+## Repository language
+
+- Write all commit messages in English.
+- Write all new or modified repository content in English, including code identifiers, comments, docstrings, documentation, tests, logs, error messages, and UI text.
+- Conversation with the user may remain in Portuguese.
