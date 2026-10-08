@@ -1,8 +1,9 @@
 # SkillForge backend
 
 Phase 01.01 introduces an installable Python package; 01.02 adds read-only
-health and service-info endpoints. Settings, CORS, logging and pytest coverage
-belong to subsequent phase 01 tasks.
+health and service-info endpoints. Phase 01.03 adds validated environment
+settings, an explicit CORS allowlist and structured logging. Pytest coverage
+and the joint frontend/backend startup guide remain subsequent tasks.
 
 ## Environment and dependencies
 
@@ -31,7 +32,8 @@ package is `app`; its ASGI entrypoint is `app.main:app`. No paid model call is i
 
 ## HTTP contracts (01.02)
 
-From `backend/`, run `uv run --no-sync uvicorn app.main:app --host 127.0.0.1 --port 8000`.
+From `backend/`, run `uv run --no-sync python -m app`. This supported launcher
+binds to `127.0.0.1:8000` and configures safe JSON logging before starting Uvicorn.
 
 | Request | HTTP status | JSON response |
 |---|---|---|
@@ -87,3 +89,64 @@ Verified on 2026-10-07 (America/Sao_Paulo), Python 3.14.7:
 - The first HTTP attempt was blocked by the sandbox's loopback bind restriction;
   the permitted retry passed. No external provider or credentials were accessed.
 - `UV_CACHE_DIR=/private/tmp/skillforge-uv-cache uv build --project backend --offline`: exit 0; updated sdist and wheel built successfully.
+
+
+## Settings, CORS and logging (01.03)
+
+Settings are read once at application creation from the process environment.
+No dotenv file, credential file or provider configuration is read. Changes require
+restarting the process. The application factory `create_app(settings)` accepts
+explicit settings for checks and future integration.
+
+| Variable | Default | Accepted values |
+|---|---|---|
+| `SKILLFORGE_CORS_ORIGINS` | `["http://localhost:3000","http://127.0.0.1:3000"]` | JSON array of explicit HTTP(S) origins; `[]` disables cross-origin access |
+| `SKILLFORGE_LOG_LEVEL` | `INFO` | `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL` |
+| `SKILLFORGE_PORT` | `8000` | Integer 1–65535; supported launcher always binds to loopback |
+
+Origin entries cannot contain wildcards, credentials, paths, queries, fragments
+or whitespace. Invalid configuration stops startup without printing its values.
+For example, from `backend/`:
+
+```bash
+SKILLFORGE_CORS_ORIGINS='["http://localhost:3000"]' SKILLFORGE_PORT=8001 uv run --no-sync python -m app
+```
+
+CORS allows only GET and the middleware's standard safelisted headers, with
+credentials disabled. Preflight requests for disallowed origins, methods or
+headers return 400. Ordinary requests from disallowed origins receive no
+allow-origin header: CORS is a browser policy, not authentication or a network
+firewall. Configuration follows the [FastAPI CORS documentation](https://fastapi.tiangolo.com/tutorial/cors/).
+
+The supported `python -m app` launcher replaces root/Uvicorn handlers with JSON
+logging and disables Uvicorn access logs. Each request record includes UTC
+`timestamp`, `level`, `event`, numeric `status` and `duration_ms`. Other server
+records contain only timestamp, level and a generic `server_event`/`server_error`.
+No raw messages, traceback text, request paths, queries, headers, bodies or
+configuration values are formatted. This deliberately limits diagnostics to
+avoid leaking secrets through arbitrary messages and exceptions. INFO request
+records are suppressed at WARNING or higher; 5xx records use ERROR.
+
+Direct Uvicorn CLI invocation or third-party handlers can bypass the launcher's
+logging policy; use the documented launcher. This policy covers configured
+Python logging handlers, not arbitrary print statements or future subprocess
+output. Future diagnostics must preserve this data-minimization boundary.
+
+### Verification — 01.03
+
+Last reviewed: **2026-10-07 (America/Sao_Paulo)**.
+
+- `backend/.venv/bin/python -m unittest discover -s backend/tests -v`: exit 0,
+  four tests passed. Covers defaults/overrides, invalid settings, wildcard and
+  credential-bearing origin rejection, allowed/denied/empty CORS origins,
+  preflight method/header restrictions, JSON logging for 200/404/500, and
+  exclusion of sentinel secrets in paths, queries, headers, bodies and exceptions.
+  These are standard-library regression checks; the planned pytest setup in
+  01.04 remains unchecked.
+- `backend/.venv/bin/python /private/tmp/skillforge-check-0103.py`: exit 0.
+  Session-local harness launched `python -m app` on a temporary loopback port,
+  verified both existing JSON contracts, OpenAPI schemas, 404/405 responses,
+  parsed server output as JSON and confirmed a query sentinel was absent.
+  The server was stopped after verification. No model calls were made.
+- Subprocess startup with a credential-bearing origin: nonzero exit as expected; sentinel value absent from stdout/stderr.
+- `UV_CACHE_DIR=/private/tmp/skillforge-uv-cache uv build --project backend --offline`: exit 0, sdist and wheel built. `git diff --check`: exit 0.
