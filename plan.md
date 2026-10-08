@@ -27,7 +27,7 @@
 |---|---|---|---|---|
 | 00 | Inventory & Baseline | done | None | [plans/00-inventory-baseline.md](plans/00-inventory-baseline.md) |
 | 01 | Python Backend Foundation | done | 00 | [plans/01-python-backend-foundation.md](plans/01-python-backend-foundation.md) |
-| 02 | Domain Models & Evaluation Registry | not-started | 01 | [plans/02-domain-models-evaluation-registry.md](plans/02-domain-models-evaluation-registry.md) |
+| 02 | Domain Models & Evaluation Registry | in-progress | 01 | [plans/02-domain-models-evaluation-registry.md](plans/02-domain-models-evaluation-registry.md) |
 | 03 | Local CLI Provider Adapters | not-started | 02 | [plans/03-local-cli-provider-adapters.md](plans/03-local-cli-provider-adapters.md) |
 | 04 | Benchmark Orchestrator & Scoring | not-started | 03 | [plans/04-benchmark-orchestrator-scoring.md](plans/04-benchmark-orchestrator-scoring.md) |
 | 05 | Next.js Dashboard MVP | not-started | 04 | [plans/05-next.js-dashboard-mvp.md](plans/05-next.js-dashboard-mvp.md) |
@@ -37,10 +37,10 @@
 
 ## Current position
 
-- **Phase 00 audited and complete.** Last reviewed: **2026-10-07 (America/Sao_Paulo)**. See [current-state evidence](docs/architecture/current-state.md). **Phase 01 is complete (01.01–01.05 verified).** Next eligible task: **02.01** (Pydantic schemas for provider, model, skill, eval and run).
+- **Phase 00 audited and complete.** Last reviewed: **2026-10-07 (America/Sao_Paulo)**. See [current-state evidence](docs/architecture/current-state.md). **Phase 01 is complete (01.01–01.05 verified).** **02.01 is verified.** Next eligible task: **02.02** (load and validate skill/evaluation metadata).
 - Verified existing assets: root Next.js scaffold, one authored skill with references, EVAL-001 dataset and a dedicated prototype runner. Two ignored preparation manifests are `prepared`, both arms `not_run`, usage `null`. Generic scripts and contributor documents are empty placeholders.
 - Backend package and pinned dependency baseline are implemented; isolated installation, packaging, lock consistency and imports passed on Python 3.14.7. See [backend verification](backend/README.md). Health/info HTTP endpoints and OpenAPI contracts passed local verification; validated settings, restricted CORS and safe JSON logging are implemented with four standard-library safety checks. Pytest now covers health/info contracts and configuration integration alongside existing safety checks: 15 tests and 17 subtests passed with warnings treated as errors.
-- During phase 00, lint and TypeScript passed on the local tree; tests were not configured. Dashboard, general adapters, persistence, Docker and CI remain unimplemented. Phases 02–08 remain not-started; precursor artifacts do not complete those phases.
+- During phase 00, lint and TypeScript passed on the local tree; tests were not configured. Dashboard, general adapters, persistence, Docker and CI remain unimplemented. Phase 02 now has versioned domain contracts; loading and discovery remain pending. Phases 03–08 remain not-started; precursor artifacts do not complete those phases.
 - Do not duplicate installation or claim phase 00 is complete without checking the actual repository.
 - Planned architecture: Next.js UI → FastAPI → benchmark orchestrator → CLI/API/local adapters → reports; Docker for reproducible web/API services, host executor for authenticated local CLIs initially.
 
@@ -71,3 +71,4 @@
 | 2026-10-07 (America/Sao_Paulo) | 01.03 | [Settings/CORS/logging evidence](backend/README.md): four safety tests passed; real loopback launcher preserves HTTP contracts and produces JSON logs without query sentinel values | phase 01 in-progress; 01.03 done |
 | 2026-10-07 (America/Sao_Paulo) | 01.04 | [Pytest setup and evidence](backend/README.md): pinned dev dependencies, HTTP/config tests and state isolation; 15 tests and 17 subtests passed with `-W error`, dependency check exit 0 | phase 01 in-progress; 01.04 done |
 | 2026-10-07 (America/Sao_Paulo) | 01.05 | [Local development guide](docs/guides/local-development.md): Next.js and backend HTTP responses verified together and independently after stopping the other service; harness exit 0; created processes cleaned up | phase 01 done |
+| 2026-10-07 (America/Sao_Paulo) | 02.01 | [Domain contracts](docs/architecture/contracts.md): provider/model/skill/evaluation/run schemas with explicit IDs and revisions; full backend suite exit 0, 59 tests and 17 subtests passed with warnings treated as errors | phase 02 in-progress; 02.01 done |

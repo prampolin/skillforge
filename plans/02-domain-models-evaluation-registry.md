@@ -1,13 +1,13 @@
 # Phase 02 — Domain Models & Evaluation Registry
 
-**Status:** not-started  
-**Last reviewed:** 2026-10-07  
+**Status:** in-progress
+**Last reviewed:** 2026-10-07 (America/Sao_Paulo)
 **Dependencies:** 01  
 **Purpose:** Standardize skills, models, benchmarks and execution results.
 
 ## Scope and tasks
 
-- [ ] **02.01 — Define Pydantic schemas for provider, model, skill, eval and run**  
+- [x] **02.01 — Define Pydantic schemas for provider, model, skill, eval and run**
   Acceptance: Schemas have explicit identifiers and versions.
 - [ ] **02.02 — Load and validate evals/datasets and skills metadata**  
   Acceptance: Malformed metadata yields actionable validation errors.
@@ -31,4 +31,4 @@
 
 | Date (UTC or with timezone) | Item | Change / evidence | Result |
 |---|---|---|---|
-| — | — | No execution recorded yet | not-started |
+| 2026-10-07 (America/Sao_Paulo) | 02.01 | Added five versioned domain schemas, revision references, unknown capability/usage semantics and run consistency validation. [Contracts and evidence](../docs/architecture/contracts.md): pytest with `-W error` exit 0, 59 tests and 17 subtests passed. Registry, metadata loading and stable registry fixture remain pending | verified |
